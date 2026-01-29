@@ -5,7 +5,7 @@ grid.classList.add ("grid");
 document.body.appendChild(grid);
 
 // lista 
-let allcells =[];
+let allCells =[];
 
 // ciclo para fazer os 9 squares
 for (let i=0;i<9;i++){
@@ -23,6 +23,14 @@ for (let i=0;i<9;i++){
 		cell.maxLength = "1";
 		cell.inputMode = "numeric";
 		
+		// i = índice do square (0-8), j = índice da célula no square (0-8)
+        let linha = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+        let coluna = (i % 3) * 3 + (j % 3);
+
+        cell.dataset.line = linha;
+        cell.dataset.column = coluna;
+        cell.dataset.square = i + 1;
+		
 		// so se pode escrever numeros de 1 a 9. isNaN impede letras
 		cell.addEventListener("input", function(){
 			if(isNaN(this.value) || this.value === "0"){
@@ -30,23 +38,71 @@ for (let i=0;i<9;i++){
 			}
         });
 		square.appendChild(cell);
-        allcells.push(cell);
+        allCells.push(cell);
 		}
 		
 	}
 
-// coordenadas
-for (let k=0;k<allcells.length;k++){
-    let currentCell = allcells[k];
-		let x= Math.floor(k/9);
-		let y=k%9;
-		let z= Math.floor(x/3)*3 + Math.floor(y/3)+1 ;
+
+let numbers = [1,2,3,4,5,6,7,8,9];
+// função baralhar (Fisher-Yates)
+function shuffle(numbers){
+	for (let i = numbers.length - 1; i>0; i--) {
+		const j = Math.floor(Math.random()*(i+1));
 		
-		currentCell.dataset.linha = x;
-		currentCell.dataset.coluna = y;
-		currentCell.dataset.square = z;
+		[numbers [i], numbers[j]]=[numbers [j], numbers[i]];
+	}
+	return numbers;
 }
 
-//procurar a primeira cell vazia
-let FoundCell = allCells.find(cell=>cell.value==="");
+
+// number existe nesta line? .some "existe alguma cell q tenha isto?"
+function verifyLine(number, l){
+	return !allCells.some(cell => cell.dataset.line == l && cell.value==number); //se n encontrar, return true, pode colocar la o numero 
+}
+
+function verifyColumn(number, c){
+	return !allCells.some(cell => cell.dataset.column == c && cell.value==number); //se n encontrar, return true, pode colocar la o numero 
+}
+
+function verifySquare(number, s){
+	return !allCells.some(cell => cell.dataset.square == s && cell.value==number); //se n encontrar, return true, pode colocar la o numero 
+}
+
+function CompleteSudoku (){
+	//procurar a primeira cell vazia
+	let FoundCell = allCells.find(cell => cell.value === "");
+	
+	
+	if (FoundCell){
+		// as coordenadas da primeira cell vazia
+		let l = FoundCell.dataset.line;
+		let c = FoundCell.dataset.column;
+		let s = FoundCell.dataset.square;
+	
+		let numbers = [1,2,3,4,5,6,7,8,9]; //criada nova lista para baralhar sempre antes de cada cell
+		shuffle(numbers);
+	
+		for (let i=0;i<9;i++){
+			let number = numbers[i];
+			if (verifyLine(number,l) && verifyColumn(number,c) && verifySquare(number,s)){
+			FoundCell.value = number;
+			
+			if (CompleteSudoku()){
+				return true; // se o resto do tabuleiro funcionar, mantem o numero.
+			}
+			
+			FoundCell.value="";
+			}
+		}
+	}
+	else{
+		return true;
+	}
+	return false;
+}
+
+CompleteSudoku();
+
+
 
