@@ -26,5 +26,29 @@
     font-size: 20px;
     border: 0.5px solid #ccc;
     box-sizing: border-box;
+
 }
 
+.fixed {
+    font-weight: bold;
+
+
+}
+
+.window {
+    display: none; /* Escondida por padrão */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza mesmo no meio */
+    
+    width: 300px;
+    padding: 40px;
+    background-color: white;
+    border: 4px solid black;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 1000;
+    
+    text-align: center;
+    font-family: sans-serif;
+}

@@ -34,7 +34,7 @@ for (let i=0;i<9;i++){
         cell.dataset.square = i + 1;
 		
 		// so se pode escrever numeros de 1 a 9. isNaN impede letras
-		cell.addEventListener("input", () => {
+		cell.addEventListener("input", function() {
 			if(isNaN(this.value) || this.value === "0"){
 				this.value="";
 			}
@@ -166,6 +166,8 @@ CompleteSudoku();
 
 solution = allCells.map(cell=>cell.value); // guardar o tabuleiro gerado antes de tirar os numeros
 
+TakeNumbers();
+
 for (let i=0;i<81;i++){
 	if (allCells[i].value !==""){
 		allCells[i].readOnly = true; // para o user n mexer
@@ -173,23 +175,34 @@ for (let i=0;i<81;i++){
 	}
 }
 
-TakeNumbers();
-
-// funcao para verificar input
+// funcao para verificar input 
 function VictoryCheck(){
-	for (let i = 0; i<81;i++){
-		if(allCells[i].value ==="" || allCells[i].value!= solution[i]){
-			return;
-		}
-	}
-	document.querySelector(".window").style.display = "block";
+    console.log("VictoryCheck chamada!");
+    
+    for (let i = 0; i < 81; i++){
+        if(allCells[i].value === ""){
+            console.log("Há células vazias ainda");
+            return;
+        }
+        if(allCells[i].value != solution[i]){
+            console.log("Célula errada:", i, "tem", allCells[i].value, "devia ser", solution[i]);
+            return;
+        }
+    }
+    
+    console.log("VITÓRIA!!!");
+    document.querySelector(".window").style.display = "block";
 }
 
-
+// Adicionar event listeners ÀS CÉLULAS EDITÁVEIS
 allCells.forEach(function(cell) {
-    if (cell.readOnly === false) {
-        cell.addEventListener("input", VictoryCheck);
+    if (!cell.readOnly) {
+        cell.addEventListener("input", VictoryCheck);  // chamar diretamente, sem função anónima
     }
 });
+
+
+
+
 
 
