@@ -1,16 +1,18 @@
 
 // criar o grid
-const grid = document.createElement ("div");
-grid.classList.add ("grid");
+const grid = document.createElement("div");
+grid.classList.add("grid");
 document.body.appendChild(grid);
 
 // lista 
 let allCells =[];
+let solution =[];
 
+const victorywindow = document.getElementsByClassName("window");
 // ciclo para fazer os 9 squares
 for (let i=0;i<9;i++){
 	const square = document.createElement ("div");
-	square.classList.add ("square");
+	square.classList.add("square");
     grid.appendChild(square);
     
 	//ciclo para fazer as 81 celulas (de 0 a 80) - criar 9 cells dentro do square
@@ -32,7 +34,7 @@ for (let i=0;i<9;i++){
         cell.dataset.square = i + 1;
 		
 		// so se pode escrever numeros de 1 a 9. isNaN impede letras
-		cell.addEventListener("input", function(){
+		cell.addEventListener("input", () => {
 			if(isNaN(this.value) || this.value === "0"){
 				this.value="";
 			}
@@ -88,10 +90,10 @@ function CompleteSudoku (){
 			if (verifyLine(number,l) && verifyColumn(number,c) && verifySquare(number,s)){
 			FoundCell.value = number;
 			
-			if (CompleteSudoku()){
-				return true; // se o resto do tabuleiro funcionar, mantem o numero.
-			}
-			
+				if (CompleteSudoku()){
+					return true; // se o resto do tabuleiro funcionar, mantem o numero.
+				}
+
 			FoundCell.value="";
 			}
 		}
@@ -102,7 +104,92 @@ function CompleteSudoku (){
 	return false;
 }
 
+
+let CellstoTest =[...allCells];
+shuffle (CellstoTest);
+let solucoes = 0;
+
+function TakeNumbers(){
+
+let meta = 40;
+let removidos = 0;
+	
+	for (let i=0;i<81;i++){
+		if (CellstoTest[i].value !== ""){ // checkar se o value é true - tem numero
+			let CellNumber = CellstoTest[i].value;
+			CellstoTest[i].value="";
+			
+			solucoes = 0;
+			verificador();
+			if (solucoes === 1){
+					removidos++;
+				if (removidos===meta){
+					return true;
+				}
+			}
+			else {
+			CellstoTest[i].value=CellNumber;
+			}
+		}
+		
+	}
+}
+
+
+function verificador() {
+    if (solucoes > 1) return; // se já encontramos 2, não precisamos de mais
+
+    let FoundCell = allCells.find(cell => cell.value === "");
+
+    if (!FoundCell) {
+        solucoes++; // Encontrou UMA solução completa
+        return;
+    }
+
+    let l = FoundCell.dataset.line;
+    let c = FoundCell.dataset.column;
+    let s = FoundCell.dataset.square;
+
+    for (let i = 1; i <= 9; i++) {
+        if (verifyLine(i, l) && verifyColumn(i, c) && verifySquare(i, s)) {
+            FoundCell.value = i;
+            
+            verificador(); // Chama a si mesma para continuar a preencher
+            
+            FoundCell.value = ""; // Limpa para testar o próximo número (Backtracking)
+            
+            if (solucoes > 1) return; // Se a recursão lá em baixo já achou 2 soluções, sai cedo
+        }
+    }
+}
 CompleteSudoku();
 
+solution = allCells.map(cell=>cell.value); // guardar o tabuleiro gerado antes de tirar os numeros
+
+for (let i=0;i<81;i++){
+	if (allCells[i].value !==""){
+		allCells[i].readOnly = true; // para o user n mexer
+		allCells[i].classList.add("fixed"); // para ficarem em bold
+	}
+}
+
+TakeNumbers();
+
+// funcao para verificar input
+function VictoryCheck(){
+	for (let i = 0; i<81;i++){
+		if(allCells[i].value ==="" || allCells[i].value!= solution[i]){
+			return;
+		}
+	}
+	document.querySelector(".window").style.display = "block";
+}
+
+
+allCells.forEach(function(cell) {
+    if (cell.readOnly === false) {
+        cell.addEventListener("input", VictoryCheck);
+    }
+});
 
 

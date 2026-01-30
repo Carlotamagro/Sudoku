@@ -49,8 +49,7 @@ MOSTRAR APENAS ALGUMAS CASAS
 Dificuldade
 Fácil 36 — 46 4 ou 5 casas
     ex: Tenho de retirar exatamente 40 números"
-        Escolhe uma coordenada (x, y) aleatória.
-        Se ela tiver um número, tenta retirá-lO.
+        Se ela tiver um número, tenta retirá-lo.
         Usa o VERIFICADOR: "Se eu tirar este número, o Sudoku ainda só tem 1 solução?"
             Se Sim: Retira e guarda esse tabuleiro novo (e comeca o processo de novo neste tabuleiro).
             Se Não: Deixa lá o número e escolhe outra coordenada.
@@ -58,10 +57,11 @@ Médio 30 — 35 3 ou 4 casas
 Difícil 17 — 28 2 ou 3 casas
 
 
-   VERIFICADOR
-tenta o 1... n da
-tenta o 2... da (contador +1)
-tenha o 3... n da
-tenta o 4...  da(contador +1)
-contador >1, verificador diz q n se pode tirar aquela casa
+VERIFICADOR
+igual ao gerar sudoku mas quando encontra uma solucao, soma às solucoes. se solucoes > 1, o verificador retorna q n pode tirar o numero.
 
+
+USER
+User mete um numero.
+verificar se numero posto naquela cell é igual ao numero na solucao
+se sim - 
