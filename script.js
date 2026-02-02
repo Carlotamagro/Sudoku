@@ -142,7 +142,7 @@ function verificador() {
     let FoundCell = allCells.find(cell => cell.value === "");
 
     if (!FoundCell) {
-        solucoes++; // Encontrou UMA solução completa
+        solucoes++; // Encontrou 1 solução completa
         return;
     }
 
@@ -154,11 +154,11 @@ function verificador() {
         if (verifyLine(i, l) && verifyColumn(i, c) && verifySquare(i, s)) {
             FoundCell.value = i;
             
-            verificador(); // Chama a si mesma para continuar a preencher
+            verificador(); 
             
-            FoundCell.value = ""; // Limpa para testar o próximo número (Backtracking)
+            FoundCell.value = "";
             
-            if (solucoes > 1) return; // Se a recursão lá em baixo já achou 2 soluções, sai cedo
+            if (solucoes > 1) return;  
         }
     }
 }
@@ -177,27 +177,17 @@ for (let i=0;i<81;i++){
 
 // funcao para verificar input 
 function VictoryCheck(){
-    console.log("VictoryCheck chamada!");
-    
-    for (let i = 0; i < 81; i++){
-        if(allCells[i].value === ""){
-            console.log("Há células vazias ainda");
-            return;
-        }
-        if(allCells[i].value != solution[i]){
-            console.log("Célula errada:", i, "tem", allCells[i].value, "devia ser", solution[i]);
-            return;
-        }
-    }
-    
-    console.log("VITÓRIA!!!");
-    document.querySelector(".window").style.display = "block";
+	for (let i = 0; i<81;i++){
+		if(allCells[i].value === "" || allCells[i].value!= solution[i]){
+			return;
+		}
+	}
+	document.querySelector(".window").style.display = "block";
 }
 
-// Adicionar event listeners ÀS CÉLULAS EDITÁVEIS
 allCells.forEach(function(cell) {
     if (!cell.readOnly) {
-        cell.addEventListener("input", VictoryCheck);  // chamar diretamente, sem função anónima
+        cell.addEventListener("input", VictoryCheck);
     }
 });
 

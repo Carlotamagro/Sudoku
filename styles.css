@@ -31,8 +31,6 @@
 
 .fixed {
     font-weight: bold;
-
-
 }
 
 .window {
@@ -51,4 +49,8 @@
     
     text-align: center;
     font-family: sans-serif;
+}
+
+.wrong {
+    background-color: red;
 }
